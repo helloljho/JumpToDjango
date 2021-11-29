@@ -20,6 +20,11 @@
         <td>
             <a href="{% url 'pybo:detail' question.id %}">
                 {{ question.subject }}
+                {% if question.answer_set.count > 0 %}
+                <span class="text-danger small m-lg-2">
+                    {{ question.answer_set.count }}
+                </span>
+                {% endif %}
             </a>
         </td>
         <td>{{ question.create_date }}</td>
