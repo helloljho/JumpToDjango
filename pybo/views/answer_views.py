@@ -1,5 +1,5 @@
 from ..forms import AnswerForm
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, resolve_url
 from ..models import Question, Answer
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
@@ -20,7 +20,8 @@ def answer_create(request, question_id):
             answer.create_date = timezone.now()
             answer.question = question
             answer.save()
-            return redirect('pybo:detail', question_id=question.id)
+            # return redirect('pybo:detail', question_id=question.id)
+            return redirect('{}#answer_{}'.format(resolve_url('pybo:detail', question_id=question.id), answer.id))
     else:
         form = AnswerForm()
     context = {'question': question, 'form': form}
@@ -44,7 +45,8 @@ def answer_modify(request, answer_id):
             answer.author = request.user
             answer.modify_date = timezone.now()
             answer.save()
-            return redirect('pybo:detail', question_id=answer.question.id)
+            # return redirect('pybo:detail', question_id=answer.question.id)
+            return redirect('{}#answer_{}'.format(resolve_url('pybo:detail', question_id=answer.question.id), answer.id))
     else:
         form = AnswerForm(instance=answer)
     context = {'answer': answer, 'form': form}
@@ -62,4 +64,3 @@ def answer_delete(request, answer_id):
     else:
         answer.delete()
     return redirect('pybo:detail', question_id=answer.question.id)
-
